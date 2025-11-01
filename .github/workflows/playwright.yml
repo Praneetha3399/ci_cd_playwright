@@ -42,7 +42,7 @@ jobs:
         if [ -n "$TEST_SUITE" ] && [ "$TEST_SUITE" != "all" ]; then
           GREP_FLAG="--grep @$TEST_SUITE"
         fi
-        npx playwright test --project ${{ github.event.inputs.browser }} $GREP_FLAG --reporter=list,html  
+        npx playwright test --project ${{ github.event.inputs.browser }} ${GREP_FLAG} --reporter=list,html  
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
