@@ -38,11 +38,11 @@ jobs:
     - name: Run Playwright tests
       run: |
         TEST_SUITE="${{ github.event.inputs['test-suite'] }}"
-        GREP_FLAG=""
         if [ -n "$TEST_SUITE" ] && [ "$TEST_SUITE" != "all" ]; then
-          GREP_FLAG="--grep @$TEST_SUITE"
-        fi
-        npx playwright test --project ${{ github.event.inputs.browser }} ${GREP_FLAG} --reporter=list,html  
+          npx playwright test --project ${{ github.event.inputs.browser }} --grep "@$TEST_SUITE" --reporter=list,html
+        else
+          npx playwright test --project ${{ github.event.inputs.browser }} --reporter=list,html
+        fi  
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
