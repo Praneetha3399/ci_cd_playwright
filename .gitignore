@@ -6,3 +6,5 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+# filepath: /Users/apple/Documents/ci_cd_palywright/.gitignore
+.env
