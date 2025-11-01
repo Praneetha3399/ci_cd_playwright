@@ -35,14 +35,23 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Debug workflow inputs
+      run: |
+        echo "Browser: ${{ github.event.inputs.browser }}"
+        echo "Test suite: ${{ github.event.inputs['test-suite'] }}"
     - name: Run Playwright tests
       run: |
         TEST_SUITE="${{ github.event.inputs['test-suite'] }}"
+        BROWSER="${{ github.event.inputs.browser }}"
+        if [ -z "$BROWSER" ]; then
+          echo "Error: browser input is not set!"
+          exit 1
+        fi
         if [ -n "$TEST_SUITE" ] && [ "$TEST_SUITE" != "all" ]; then
-          npx playwright test --project ${{ github.event.inputs.browser }} --grep "@$TEST_SUITE" --reporter=list,html
+          npx playwright test --project "$BROWSER" --grep "@$TEST_SUITE" --reporter=list,html
         else
-          npx playwright test --project ${{ github.event.inputs.browser }} --reporter=list,html
-        fi  
+          npx playwright test --project "$BROWSER" --reporter=list,html
+        fi
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
