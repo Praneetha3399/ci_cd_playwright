@@ -23,9 +23,10 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-
-    # Ensure BASE_URL is defined in repository secrets or remove this line
-    # BASE_URL: ${{ secrets.BASE_URL }}
+    env:
+      # BASE_URL: ${{ secrets.BASE_URL }}
+      # Use browser input if available, otherwise default to chromium
+      BROWSER: ${{ github.event.inputs.browser || 'chromium' }}
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -37,12 +38,12 @@ jobs:
       run: npx playwright install --with-deps
     - name: Debug workflow inputs
       run: |
-        echo "Browser: ${{ github.event.inputs.browser }}"
+        echo "Browser: $BROWSER"
         echo "Test suite: ${{ github.event.inputs['test-suite'] }}"
+        echo "BASE_URL: $BASE_URL"
     - name: Run Playwright tests
       run: |
         TEST_SUITE="${{ github.event.inputs['test-suite'] }}"
-        BROWSER="${{ github.event.inputs.browser }}"
         if [ -z "$BROWSER" ]; then
           echo "Error: browser input is not set!"
           exit 1
